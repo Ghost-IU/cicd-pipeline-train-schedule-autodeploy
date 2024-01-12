@@ -46,7 +46,7 @@ pipeline {
                     sh "kubectl apply --kubeconfig=${KUBECONFIG_CREDENTIALS} -f train-schedule-kube-canary.yml --namespace=${KUBE_NAMESPACE}"
 
                     // Wait for the deployment to stabilize
-                    sh "kubectl rollout status --kubeconfig=${KUBECONFIG_CREDENTIALS} deployment/${APP_NAME}-canary --namespace=${KUBE_NAMESPACE}"
+                    sh "kubectl rollout status --kubeconfig=${KUBECONFIG_CREDENTIALS} deployment/train-schedule-deployment-canary --namespace=${KUBE_NAMESPACE}"
                 }
             }
         }
