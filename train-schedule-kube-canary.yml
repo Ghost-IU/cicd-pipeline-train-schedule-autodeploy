@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: train-schedule
-        image: train-schedule:latest
+        image: ghostly95/train-schedule:latest
         ports:
         - containerPort: 8080
         livenessProbe:
