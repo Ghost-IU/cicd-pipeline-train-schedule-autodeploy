@@ -35,7 +35,7 @@ pipeline {
         stage('CanaryDeploy') {
             environment { 
                 CANARY_REPLICAS = 1
-                KUBECONFIG_CREDENTIALS = credentials('kubeconfig')
+                KUBECONFIG_CREDENTIALS = credentials('kubecert')
                 KUBE_NAMESPACE = 'default' // Change this line to use the default namespace
                 APP_NAME = 'train-schedule'
             }
