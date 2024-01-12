@@ -42,7 +42,7 @@ pipeline {
             steps {
                 script {
                     // Deploy to Kubernetes using kubectl
-                    sh "envsubst < train-schedule-kube-canary.yml | kubectl apply --kubeconfig=${KUBECONFIG_CREDENTIALS} -f - --namespace=default"
+                    // sh "envsubst < train-schedule-kube-canary.yml | kubectl apply --kubeconfig=${KUBECONFIG_CREDENTIALS} -f - --namespace=default"
                     sh "kubectl apply --kubeconfig=${KUBECONFIG_CREDENTIALS} -f train-schedule-kube-canary.yml --namespace=${KUBE_NAMESPACE}"
 
                     // Wait for the deployment to stabilize
