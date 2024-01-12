@@ -35,13 +35,18 @@ pipeline {
         stage('CanaryDeploy') {
             environment { 
                 CANARY_REPLICAS = 1
+                KUBECONFIG_CREDENTIALS = credentials('kubeconfig')
+                KUBE_NAMESPACE = 'default' // Change this line to use the default namespace
+                APP_NAME = 'train-schedule'
             }
             steps {
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'train-schedule-kube-canary.yml',
-                    enableConfigSubstitution: true
-                )
+                script {
+                    // Deploy to Kubernetes using kubectl
+                    sh "kubectl apply --kubeconfig=${KUBECONFIG_CREDENTIALS} -f train-schedule-kube-canary.yml --namespace=${KUBE_NAMESPACE}"
+
+                    // Wait for the deployment to stabilize
+                    sh "kubectl rollout status --kubeconfig=${KUBECONFIG_CREDENTIALS} deployment/${APP_NAME}-canary --namespace=${KUBE_NAMESPACE}"
+                }
             }
         }
         stage('DeployToProduction') {
