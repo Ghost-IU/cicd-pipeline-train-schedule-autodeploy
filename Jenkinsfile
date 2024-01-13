@@ -34,7 +34,7 @@ pipeline {
         }
         stage('CanaryDeploy') {
             environment { 
-                CANARY_REPLICAS = 1
+                CANARY_REPLICAS = 3
                 KUBECONFIG_CREDENTIALS = credentials('kubeconfig')
                 KUBE_NAMESPACE = 'default' // Change this line to use the default namespace
                 APP_NAME = 'train-schedule'
@@ -51,26 +51,19 @@ pipeline {
             }
         }
         stage('DeployToProduction') {
-            when {
-                branch 'master'
-            }
             environment { 
                 CANARY_REPLICAS = 0
+                KUBECONFIG_CREDENTIALS = credentials('kubeconfig')
+                KUBE_NAMESPACE = 'default'
             }
             steps {
-                input 'Deploy to Production?'
-                milestone(1)
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'train-schedule-kube-canary.yml',
-                    enableConfigSubstitution: true
-                )
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'train-schedule-kube.yml',
-                    enableConfigSubstitution: true
-                )
-            }
+        input 'Deploy to Production?'
+        milestone(1)
+        script {
+            sh "kubectl apply --kubeconfig=${KUBECONFIG_CREDENTIALS} -f train-schedule-kube.yml --namespace=${KUBE_NAMESPACE}"
+        }
+    }
         }
     }
 }
+
