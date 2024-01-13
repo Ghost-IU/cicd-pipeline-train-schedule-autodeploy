@@ -21,7 +21,7 @@ metadata:
   labels:
     app: train-schedule
 spec:
-  replicas: 1
+  replicas: ${CANARY_REPLICAS}
   selector:
     matchLabels:
       app: train-schedule
